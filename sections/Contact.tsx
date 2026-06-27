@@ -54,8 +54,8 @@ export default function Contact() {
           className="text-white/30 text-base md:text-lg font-body max-w-md mx-auto leading-relaxed"
           variants={fadeUp}
         >
-          Open for collaborations, freelance, and conversations about the future of
-          creative technology.
+          开放合作、自由职业与创意对话。<br />
+          一起探索 AI 时代品牌创意的边界。
         </motion.p>
 
         {/* Links — oversized */}

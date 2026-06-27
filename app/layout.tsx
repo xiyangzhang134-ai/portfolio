@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PORTFOLIO — Digital Creator",
+  title: "张熙洋 — Brand Designer & AI Creative",
   description: "A creator at the intersection of design, AI, and engineering.",
 };
 

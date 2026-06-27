@@ -4,13 +4,12 @@ import { useRef } from "react";
 import { motion, useInView, useMotionValue, useSpring } from "framer-motion";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { PROJECTS } from "@/lib/constants";
-import { SPRING } from "@/lib/constants";
 
 /** Sentinel: is this running on a touch device? */
 const IS_TOUCH = typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
 
 /**
- * Projects — full-width cards with tilt (desktop), hover image zoom & info reveal.
+ * Projects — full-width glass cards with tilt (desktop), hover image zoom & info reveal.
  */
 export default function Projects() {
   return (
@@ -26,7 +25,7 @@ export default function Projects() {
         </SectionHeading>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-8">
+      <div className="max-w-7xl mx-auto space-y-8 md:space-y-12">
         {PROJECTS.map((project, i) => (
           <ProjectCard key={project.title} project={project} index={i} />
         ))}

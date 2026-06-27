@@ -1,199 +1,80 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
-import AnimeGirl from "@/components/character/AnimeGirl";
-import AuroraBackground from "@/components/background/AuroraBackground";
-import FlowLines from "@/components/background/FlowLines";
-import MagneticButton from "@/components/ui/MagneticButton";
-import { useLenis } from "@/components/layout/LenisScrollContext";
-import { fadeUp, charReveal } from "@/animations/variants";
-
-const HERO_TEXT = {
-  greeting: "Hello, I am",
-  name: "YOUR NAME",
-  tagline: "A creator at the intersection of design, AI, and engineering — building digital experiences that feel alive.",
-};
+import CyberpunkScene from "@/components/hero/CyberpunkScene";
+import CharacterStage from "@/components/hero/CharacterStage";
+import HeroText from "@/components/hero/HeroText";
+import { fadeUp } from "@/animations/variants";
 
 /**
- * Hero — single visual center: anime girl at 70% height.
- * Entry sequence: bg → character → text → particles (~2s).
+ * Hero — Cyberpunk + Apple minimalism.
+ * Left/center: character with cyberpunk background.
+ * Right/bottom: typewriter text reveal.
  */
 export default function Hero() {
-  const [started, setStarted] = useState(false);
-  const { lenis } = useLenis();
-
-  const scrollToAbout = useCallback(() => {
-    const target = document.querySelector("#about") as HTMLElement | null;
-    if (target && lenis) {
-      lenis.scrollTo(target, { offset: 0 });
-    }
-  }, [lenis]);
-
-  useEffect(() => {
-    // Kick off entry animation immediately after mount
-    const timer = setTimeout(() => setStarted(true), 60);
-    return () => clearTimeout(timer);
-  }, []);
+  const [animPhase, setAnimPhase] = useState<"idle" | "morphing" | "waving">("idle");
 
   return (
     <section
       id="home"
-      className="relative h-dvh w-full overflow-hidden flex items-center justify-center"
+      className="relative h-dvh w-full overflow-hidden flex items-center"
     >
-      {/* ── Background layers ── */}
-      {/* Aurora blobs (CSS) */}
-      <div className="absolute inset-0 z-0">
-        <motion.div
-          className="aurora-blob max-sm:w-[300px] max-sm:h-[300px]"
-          style={{
-            width: 600,
-            height: 600,
-            background: "#8B5CF6",
-            top: "10%",
-            left: "20%",
-            opacity: 0.12,
-          }}
-          animate={{ x: [0, 40, -20, 0], y: [0, -30, 20, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="aurora-blob max-sm:w-[250px] max-sm:h-[250px]"
-          style={{
-            width: 500,
-            height: 500,
-            background: "#6D5EF8",
-            bottom: "15%",
-            right: "15%",
-            opacity: 0.1,
-          }}
-          animate={{ x: [0, -30, 15, 0], y: [0, 25, -15, 0] }}
-          transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="aurora-blob max-sm:w-[180px] max-sm:h-[180px]"
-          style={{
-            width: 350,
-            height: 350,
-            background: "#FFB7D5",
-            top: "50%",
-            left: "50%",
-            opacity: 0.08,
-          }}
-          animate={{ x: [0, 25, -15, 0], y: [0, 20, -25, 0] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        />
-        <motion.div
-          className="aurora-blob max-sm:w-[200px] max-sm:h-[200px]"
-          style={{
-            width: 400,
-            height: 400,
-            background: "#8FD3FF",
-            top: "5%",
-            right: "5%",
-            opacity: 0.06,
-          }}
-          animate={{ x: [0, -20, 10, 0], y: [0, 15, -10, 0] }}
-          transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-        />
-      </div>
+      {/* Cyberpunk canvas background */}
+      <CyberpunkScene />
 
-      {/* Three.js particles */}
-      <AuroraBackground />
+      {/* Grain overlay */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none"
+        style={{
+          opacity: 0.025,
+          backgroundImage:
+            "url('data:image/svg+xml,%3Csvg viewBox=%220 0 256 256%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.75%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22 opacity=%221%22/%3E%3C/svg%3E')",
+          backgroundSize: "256px 256px",
+        }}
+      />
 
-      {/* Flow lines */}
-      <FlowLines />
-
-      {/* ── Character — absolute center ── */}
-      <motion.div
-        className="absolute inset-0 z-10 flex items-center justify-center"
-        initial={{ opacity: 0 }}
-        animate={started ? { opacity: 1 } : {}}
-        transition={{ duration: 0.8, delay: 0.4 }}
-      >
-        <div className="h-[70vh] aspect-[2/3] relative">
-          <AnimeGirl delay={0.5} />
+      {/* Layout: vertical stack on mobile, horizontal split on desktop */}
+      <div className="relative z-10 w-full h-full flex flex-col md:flex-row items-center justify-between px-6 sm:px-10 md:px-16 lg:px-24 py-16 md:py-0">
+        {/* Left: Character Stage */}
+        <div className="relative w-full md:w-[55%] lg:w-[50%] h-[55vh] md:h-full flex items-center justify-center order-1 md:order-none">
+          <CharacterStage onPhaseChange={setAnimPhase} />
         </div>
-      </motion.div>
 
-      {/* ── Text overlay — bottom-left on desktop, centered on mobile ── */}
-      <div className="absolute bottom-8 left-4 right-4 sm:left-8 md:bottom-12 md:left-12 lg:bottom-16 lg:left-20 z-20 max-w-lg mx-auto sm:mx-0">
-        {/* Greeting */}
-        <motion.h2
-          className="text-xs sm:text-sm md:text-base uppercase tracking-[0.3em] text-[#8FD3FF] mb-3 font-body"
-          variants={fadeUp}
-          initial="hidden"
-          animate={started ? "visible" : "hidden"}
-        >
-          {HERO_TEXT.greeting}
-        </motion.h2>
-
-        {/* Name — char-by-char reveal */}
-        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-black leading-none mb-4">
-          <motion.span
-            className="inline-block"
-            style={{
-              background: "linear-gradient(135deg, #FFF6FB 0%, #FFB7D5 40%, #8B5CF6 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-            }}
+        {/* Right: Text — positioned bottom on mobile, center-right on desktop */}
+        <div className="relative w-full md:w-[45%] lg:w-[50%] flex items-center justify-start md:justify-end order-2 md:order-none pb-4 md:pb-0 md:pr-0 lg:pr-8">
+          <motion.div
+            className="w-full max-w-md"
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
           >
-            {HERO_TEXT.name.split("").map((char, i) => (
-              <motion.span
-                key={i}
-                className="inline-block"
-                variants={charReveal}
-                initial="hidden"
-                animate={started ? "visible" : "hidden"}
-                custom={i}
-              >
-                {char === " " ? " " : char}
-              </motion.span>
-            ))}
-          </motion.span>
-        </h1>
-
-        {/* Tagline */}
-        <motion.p
-          className="text-xs sm:text-sm md:text-base text-white/40 leading-relaxed font-body max-w-xs mb-6"
-          variants={fadeUp}
-          initial="hidden"
-          animate={started ? "visible" : "hidden"}
-          custom={6}
-        >
-          {HERO_TEXT.tagline}
-        </motion.p>
-
-        {/* CTA */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate={started ? "visible" : "hidden"}
-          custom={8}
-        >
-          <MagneticButton onClick={scrollToAbout}>
-            Explore
-          </MagneticButton>
-        </motion.div>
+            <HeroText />
+          </motion.div>
+        </div>
       </div>
 
-      {/* ── Scroll cue ── */}
-      <motion.div
-        className="absolute bottom-6 right-8 z-20 flex flex-col items-center gap-1"
-        variants={fadeUp}
-        initial="hidden"
-        animate={started ? "visible" : "hidden"}
-        custom={10}
-      >
-        <span className="text-[10px] uppercase tracking-[0.2em] text-white/30 font-body">
-          Scroll
-        </span>
+      {/* Bottom gradient fade */}
+      <div className="absolute bottom-0 inset-x-0 h-32 z-[2] pointer-events-none bg-gradient-to-t from-[#0D1117]/60 to-transparent" />
+
+      {/* Scroll indicator */}
+      {animPhase === "waving" && (
         <motion.div
-          className="w-[1px] h-8 bg-gradient-to-b from-white/30 to-transparent"
-          animate={{ scaleY: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        />
-      </motion.div>
+          className="absolute bottom-6 right-6 md:bottom-8 md:right-10 z-20 flex flex-col items-center gap-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 0.6 }}
+        >
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/25 font-body">
+            Scroll
+          </span>
+          <motion.div
+            className="w-[1px] h-7 bg-gradient-to-b from-white/25 to-transparent"
+            animate={{ scaleY: [1, 1.6, 1], opacity: [0.25, 0.5, 0.25] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      )}
     </section>
   );
 }
