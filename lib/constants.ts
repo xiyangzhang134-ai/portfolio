@@ -27,12 +27,21 @@ export const SPRING = {
 
 /** Navigation links */
 export const NAV_LINKS = [
-  { label: "Work",    href: "#projects" },
-  { label: "About",   href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "作品",   href: "#projects" },
+  { label: "技能",   href: "#skills" },
+  { label: "历程",   href: "#timeline" },
+  { label: "联系",   href: "#contact" },
 ] as const;
 
-/** Projects — placeholder for real portfolio work */
+/** Hero rotating roles */
+export const ROLES = [
+  "品牌设计师",
+  "广告设计师",
+  "创意策划",
+  "AI 创意设计",
+] as const;
+
+/** Projects — 我的作品 */
 export const PROJECTS = [
   {
     title: "XR 品牌视觉系统",
@@ -41,6 +50,12 @@ export const PROJECTS = [
     image: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
     color: "from-[#8B5CF6] via-[#6D5EF8] to-[#FFB7D5]",
     tags: ["Brand", "Motion", "AI"],
+    background: "XR 科技品牌寻求全新视觉升级",
+    role: "品牌设计师 / 视觉主创",
+    goal: "建立兼具科技感与人文温度的品牌视觉系统",
+    process: "品牌调研 → 视觉策略 → AI 辅助方案生成 → 设计定稿 → Motion Guideline",
+    result: "品牌识别度提升 40%，获 Behance 推荐",
+    summary: "证明了 AI 可以在保持创意质量的前提下，大幅加速品牌设计流程。",
   },
   {
     title: "元宇宙活动策划",
@@ -49,6 +64,12 @@ export const PROJECTS = [
     image: "https://images.unsplash.com/photo-1639762481055-c888ca09b8ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
     color: "from-[#6D5EF8] via-[#8FD3FF] to-[#8B5CF6]",
     tags: ["Creative", "3D", "Spatial"],
+    background: "品牌需要在元宇宙中举办新品发布会",
+    role: "创意策划 / 空间设计师",
+    goal: "创造沉浸式虚拟发布体验，吸引 Z 世代用户",
+    process: "空间概念 → 互动叙事设计 → 3D 建模 → 虚拟搭建 → 测试优化",
+    result: "线上参与人数超 50 万，社交媒体曝光 300 万+",
+    summary: "沉浸式体验不只是技术堆砌，而是将品牌故事转化为可感知的空间叙事。",
   },
   {
     title: "AI 生成广告系统",
@@ -57,37 +78,65 @@ export const PROJECTS = [
     image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1740&q=80",
     color: "from-[#FFB7D5] via-[#8B5CF6] to-[#8FD3FF]",
     tags: ["AI", "Generative", "Brand"],
+    background: "品牌需要快速产出大量广告视觉素材",
+    role: "AI 工作流设计师 / 品牌顾问",
+    goal: "利用 AI 实现品牌视觉的规模化生产，同时保持一致性",
+    process: "品牌基因提取 → Prompt 工程 → 生成流程设计 → 质量审核 → 迭代优化",
+    result: "广告素材产出效率提升 10 倍，A/B 测试 CTR 提升 25%",
+    summary: "AI 不是替代设计师，而是让设计师能够把更多精力放在策略与创意上。",
   },
 ] as const;
 
-/** Skills — tag cloud display */
+/** Skills — star ratings */
 export const SKILLS = [
-  { name: "品牌设计",     color: "#8B5CF6" },
-  { name: "AI 创意",      color: "#6D5EF8" },
-  { name: "3D / Spatial", color: "#8FD3FF" },
-  { name: "Motion",       color: "#FFB7D5" },
-  { name: "广告策划",     color: "#8B5CF6" },
-  { name: "活动创意",     color: "#6D5EF8" },
-  { name: "Figma",        color: "#8FD3FF" },
-  { name: "原型设计",     color: "#FFB7D5" },
-  { name: "视频后期",     color: "#A78BFA" },
-  { name: "策略分析",     color: "#60A5FA" },
+  { name: "品牌设计",     stars: 5 },
+  { name: "广告设计",     stars: 4 },
+  { name: "活动策划",     stars: 4 },
+  { name: "Photoshop",    stars: 4 },
+  { name: "Illustrator",  stars: 4 },
+  { name: "Figma",        stars: 4 },
+  { name: "Claude Code",  stars: 5 },
+  { name: "ChatGPT",      stars: 5 },
+  { name: "HTML",         stars: 4 },
+  { name: "CSS",          stars: 4 },
+  { name: "JavaScript",   stars: 3 },
+  { name: "React",        stars: 3 },
+] as const;
+
+/** Advantages — 我的优势 */
+export const ADVANTAGES = [
+  { emoji: "🎨", title: "品牌设计思维", desc: "理解品牌定位与视觉表达。" },
+  { emoji: "✨", title: "广告创意思维", desc: "善于提出有传播力的创意方案。" },
+  { emoji: "🤖", title: "AI 高效工作流", desc: "熟练使用 Claude、ChatGPT 等 AI 工具提升设计效率。" },
+  { emoji: "📈", title: "持续学习", desc: "保持学习，快速适应新的设计趋势与工具。" },
+] as const;
+
+/** AI Workflow steps */
+export const AI_WORKFLOW = [
+  "需求分析",
+  "灵感收集",
+  "Claude 创意策划",
+  "ChatGPT 文案优化",
+  "Figma 界面设计",
+  "Claude Code 开发",
+  "测试与优化",
+  "上线交付",
+] as const;
+
+/** Timeline */
+export const TIMELINE = [
+  { year: "2024", event: "开始接触 AI 创意设计" },
+  { year: "↓",   event: "学习品牌设计" },
+  { year: "↓",   event: "学习 UI 设计" },
+  { year: "↓",   event: "制作个人作品集" },
+  { year: "2026", event: "寻找品牌设计相关工作" },
 ] as const;
 
 /** Contact — 张熙洋 */
 export const CONTACT = {
   name:    "张熙洋",
-  role:    "Brand Designer & AI Creative",
-  email:   "xiyangzhang134@gmail.com",
-  github:  "github.com/xiyangzhang134-ai",
-  instagram: "instagram.com/yourname",
-  wechat:  "wx_yourid",
+  phone:   "19897584370",
+  wechat:  "Vrone0846",
+  email:   "thecure012@qq.com",
+  github:  "xiyangzhang134-ai.github.io/portfolio",
 } as const;
-
-/** Stats for About section */
-export const STATS = [
-  { value: 23, suffix: "+", label: "Projects" },
-  { value: 7,  suffix: "",  label: "Years" },
-  { value: 14, suffix: "",  label: "Clients" },
-  { value: 3,  suffix: "M+", label: "Impressions" },
-] as const;

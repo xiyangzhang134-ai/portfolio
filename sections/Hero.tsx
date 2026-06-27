@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import CyberpunkScene from "@/components/hero/CyberpunkScene";
 import CharacterStage from "@/components/hero/CharacterStage";
 import HeroText from "@/components/hero/HeroText";
 import { fadeUp } from "@/animations/variants";
+import { useLenis } from "@/components/layout/LenisScrollContext";
 
 /**
  * Hero — Cyberpunk + Apple minimalism.
@@ -14,6 +15,17 @@ import { fadeUp } from "@/animations/variants";
  */
 export default function Hero() {
   const [animPhase, setAnimPhase] = useState<"idle" | "morphing" | "waving">("idle");
+  const { lenis } = useLenis();
+
+  const scrollToSection = useCallback(
+    (href: string) => {
+      const target = document.querySelector(href) as HTMLElement | null;
+      if (target && lenis) {
+        lenis.scrollTo(target, { offset: 0 });
+      }
+    },
+    [lenis],
+  );
 
   return (
     <section
@@ -49,7 +61,7 @@ export default function Hero() {
             animate="visible"
             variants={fadeUp}
           >
-            <HeroText />
+            <HeroText onScrollTo={scrollToSection} />
           </motion.div>
         </div>
       </div>
