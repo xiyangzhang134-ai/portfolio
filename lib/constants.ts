@@ -27,6 +27,7 @@ export const SPRING = {
 
 /** Navigation links */
 export const NAV_LINKS = [
+  { label: "关于",   href: "#about" },
   { label: "作品",   href: "#projects" },
   { label: "技能",   href: "#skills" },
   { label: "历程",   href: "#timeline" },

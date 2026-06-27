@@ -1,19 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 /**
- * CharacterStage — dual-image overlay with GSAP-powered sequence:
+ * CharacterStage — cinematic morph sequence:
  *
- * 0.0s: standing.png fades in (opacity 0→1, scale 0.95→1)
- * 0.5s: breathing idle loop starts (CSS animation driven by JS class toggle)
- * 3.5s: morph transition begins
- *       - standing.png: scale 1→1.12, opacity 1→0, blur 0→4px
- *       - waving.png:   scale 0.88→1, opacity 0→1, blur 4→0px
- * 6.0s: waving idle — gentle hand-wave every 8s
+ * 0.0s: standing.png fades in
+ * 0.5s: idle loop (gentle float + subtle breathing, hair sway CSS)
+ * 2.5s: cinematic morph begins
+ *       Step 1 — forward translation (standing moves toward camera)
+ *       Step 2 — crossfade + scale transition to waving image
+ *       Step 3 — waving settles with gentle wave every 6s
  *
- * Mouse interaction: character tilts slightly toward cursor.
+ * Uses GSAP timeline with custom cubic-bezier for film-like easing.
  */
 
 interface CharacterStageProps {
@@ -24,27 +24,27 @@ export default function CharacterStage({ onPhaseChange }: CharacterStageProps) {
   const containerRef = useRef<HTMLDivElement>(null!);
   const standingRef = useRef<HTMLImageElement>(null!);
   const wavingRef = useRef<HTMLImageElement>(null!);
-  const wavingArmRef = useRef<HTMLDivElement>(null!);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const waveIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const [breathing, setBreathing] = useState(false);
 
-  /* Follow mouse */
+  /* Mouse parallax */
   const mx = useRef(0);
   const my = useRef(0);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
-      mx.current = (e.clientX / window.innerWidth - 0.5) * 10;
-      my.current = (e.clientY / window.innerHeight - 0.5) * 6;
+      mx.current = (e.clientX / window.innerWidth - 0.5) * 8;
+      my.current = (e.clientY / window.innerHeight - 0.5) * 5;
     };
     window.addEventListener("mousemove", onMove, { passive: true });
 
-    const tick = () => {
-      if (!containerRef.current) return;
-      containerRef.current.style.transform = `perspective(800px) rotateY(${mx.current}deg) rotateX(${-my.current}deg)`;
+    const raf = () => {
+      if (containerRef.current) {
+        containerRef.current.style.transform =
+          `perspective(800px) rotateY(${mx.current}deg) rotateX(${-my.current}deg)`;
+      }
+      requestAnimationFrame(raf);
     };
-    const raf = () => { tick(); requestAnimationFrame(raf); };
     const id = requestAnimationFrame(raf);
 
     return () => {
@@ -55,62 +55,92 @@ export default function CharacterStage({ onPhaseChange }: CharacterStageProps) {
 
   /* GSAP Timeline */
   useEffect(() => {
-    const tl = gsap.timeline({ paused: true, defaults: { ease: "power3.inOut" } });
+    const tl = gsap.timeline({ paused: true });
 
-    // Set initial states
-    tl.set(wavingRef.current, { opacity: 0, scale: 0.88, filter: "blur(4px)" });
-    tl.set(standingRef.current, { opacity: 0, scale: 0.95 });
+    /* ── Initial setup ── */
+    tl.set(wavingRef.current, { opacity: 0, scale: 0.8, filter: "blur(5px)" });
+    tl.set(standingRef.current, { opacity: 0, scale: 0.92, y: 0 });
 
-    // Phase 0: standing fades in
-    tl.to(standingRef.current, { opacity: 1, scale: 1, duration: 0.7 }, 0);
-
-    // Phase 1: breathing starts
-    tl.call(() => {
-      setBreathing(true);
-      onPhaseChange?.("idle");
-    }, undefined, 0.7);
-
-    // Phase 2: morph at 3.5s
+    /* Phase 0: Fade in standing (0.7s) */
     tl.to(standingRef.current, {
-      scale: 1.12,
+      opacity: 1,
+      scale: 1,
+      duration: 0.6,
+      ease: "power2.out",
+    }, 0.15);
+
+    /* Gentle float animation on standing */
+    tl.to(standingRef.current, {
+      y: -4,
+      duration: 1.6,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: 1,
+    }, 0.4);
+
+    tl.call(() => onPhaseChange?.("idle"), undefined, 0.8);
+
+    /* ── Cinematic Morph (2.5s) ── */
+    /* Step 1: Standing moves forward + slight scale up */
+    tl.to(standingRef.current, {
+      scale: 1.08,
+      y: -8,
+      filter: "blur(1px)",
+      duration: 0.9,
+      ease: "power3.in",
+    }, 2.5);
+
+    /* Step 2: Crossfade — standing fades, waving appears */
+    tl.to(standingRef.current, {
       opacity: 0,
-      filter: "blur(3px)",
-      duration: 1.8,
+      scale: 1.14,
+      filter: "blur(4px)",
+      duration: 1.1,
       ease: "power2.inOut",
-    }, 3.5);
+    }, 3.15);
 
     tl.to(wavingRef.current, {
       opacity: 1,
       scale: 1,
       filter: "blur(0px)",
-      duration: 1.8,
-      ease: "power2.inOut",
-    }, 3.55);
+      duration: 1.0,
+      ease: "power2.out",
+    }, 3.25);
 
-    tl.call(() => {
-      setBreathing(false);
-      onPhaseChange?.("morphing");
-    }, undefined, 3.5);
+    /* Step 3: Waving settles with gentle float */
+    tl.to(wavingRef.current, {
+      y: -3,
+      duration: 1.2,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: 1,
+    }, 4.0);
 
-    tl.call(() => {
-      onPhaseChange?.("waving");
-    }, undefined, 5.5);
+    tl.call(() => onPhaseChange?.("morphing"), undefined, 2.5);
+    tl.call(() => onPhaseChange?.("waving"), undefined, 4.5);
 
     tl.play();
     timelineRef.current = tl;
 
-    /* Wave interval */
+    /* ── Gentle wave interval (every 6s) ── */
     waveIntervalRef.current = setInterval(() => {
-      if (!wavingArmRef.current) return;
-      gsap.to(wavingArmRef.current, {
-        rotation: -12,
-        duration: 0.4,
+      if (!wavingRef.current) return;
+      gsap.to(wavingRef.current, {
+        scale: 1.03,
+        duration: 0.35,
         ease: "power2.out",
         yoyo: true,
         repeat: 1,
-        transformOrigin: "top right",
       });
-    }, 8000);
+      gsap.to(wavingRef.current, {
+        x: -2,
+        duration: 0.2,
+        ease: "power2.out",
+        yoyo: true,
+        repeat: 1,
+        delay: 0.05,
+      });
+    }, 6000);
 
     return () => {
       tl.kill();
@@ -124,30 +154,24 @@ export default function CharacterStage({ onPhaseChange }: CharacterStageProps) {
       className="relative w-full h-full flex items-center justify-center"
       style={{ willChange: "transform" }}
     >
-      {/* Standing image */}
+      {/* Standing */}
       <img
         ref={standingRef}
         src="/portfolio/characters/standing.png"
         alt="Character standing"
-        className={`absolute max-h-[70vh] w-auto object-contain pointer-events-none select-none ${breathing ? "animate-character-breathe" : ""}`}
+        className="absolute max-h-[70vh] w-auto object-contain pointer-events-none select-none animate-character-float"
         draggable={false}
       />
 
-      {/* Waving image */}
-      <div
+      {/* Waving */}
+      <img
         ref={wavingRef}
-        className="absolute flex items-center justify-center"
+        src="/portfolio/characters/waving.png"
+        alt="Character waving"
+        className="absolute max-h-[70vh] w-auto object-contain pointer-events-none select-none animate-character-float"
+        draggable={false}
         style={{ willChange: "transform, opacity, filter" }}
-      >
-        <div ref={wavingArmRef} style={{ willChange: "transform" }}>
-          <img
-            src="/portfolio/characters/waving.png"
-            alt="Character waving"
-            className="max-h-[70vh] w-auto object-contain pointer-events-none select-none"
-            draggable={false}
-          />
-        </div>
-      </div>
+      />
     </div>
   );
 }

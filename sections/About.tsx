@@ -6,9 +6,8 @@ import { ADVANTAGES } from "@/lib/constants";
 import { fadeUpStaggerContainer, fadeUp } from "@/animations/variants";
 
 /**
- * About — Apple-style layout.
- * 「关于我」→ 个人介绍
- * 「我的优势」→ 4 emoji 卡片
+ * About — 个人简介模块
+ * 你好，我是张熙洋 + 背景介绍 + 核心理念 + 优势卡片
  */
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -20,7 +19,7 @@ export default function About() {
       id="about"
       className="relative min-h-screen flex items-center justify-center px-6 py-24 md:px-12 lg:px-24"
     >
-      <div className="w-full max-w-7xl mx-auto space-y-24 md:space-y-32">
+      <div className="w-full max-w-7xl mx-auto space-y-20 md:space-y-28">
         {/* ── 关于我 ── */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* LEFT */}
@@ -46,7 +45,7 @@ export default function About() {
             </h2>
           </motion.div>
 
-          {/* RIGHT — Intro */}
+          {/* RIGHT — 个人介绍 */}
           <motion.div
             className="space-y-6"
             variants={fadeUpStaggerContainer}

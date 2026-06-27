@@ -4,6 +4,7 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
 import GlowCursor from "@/components/ui/GlowCursor";
 import Hero from "@/sections/Hero";
+import About from "@/sections/About";
 import Projects from "@/sections/Projects";
 import Skills from "@/sections/Skills";
 import AIWorkflow from "@/sections/AIWorkflow";
@@ -20,6 +21,7 @@ export default function Home() {
 
         <main>
           <Hero />
+          <About />
           <Projects />
           <Skills />
           <AIWorkflow />

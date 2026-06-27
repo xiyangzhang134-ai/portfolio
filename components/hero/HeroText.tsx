@@ -179,10 +179,10 @@ export default function HeroText({
               查看作品
             </ActionButton>
             <ActionButton
-              onClick={() => onScrollTo?.("#resume")}
+              onClick={() => onScrollTo?.("#about")}
               variant="secondary"
             >
-              在线简历
+              关于我
             </ActionButton>
             <ActionButton
               onClick={() => onScrollTo?.("#contact")}
