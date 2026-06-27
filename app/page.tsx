@@ -5,10 +5,12 @@ import Navbar from "@/components/layout/Navbar";
 import GlowCursor from "@/components/ui/GlowCursor";
 import Hero from "@/sections/Hero";
 import About from "@/sections/About";
-import Projects from "@/sections/Projects";
-import Skills from "@/sections/Skills";
-import AIWorkflow from "@/sections/AIWorkflow";
-import Timeline from "@/sections/Timeline";
+import AICapabilities from "@/sections/AICapabilities";
+import AITools from "@/sections/AITools";
+import AIProjects from "@/sections/AIProjects";
+import AIOperations from "@/sections/AIOperations";
+import AILearning from "@/sections/AILearning";
+import AIThinking from "@/sections/AIThinking";
 import Contact from "@/sections/Contact";
 import Footer from "@/sections/Footer";
 
@@ -22,10 +24,12 @@ export default function Home() {
         <main>
           <Hero />
           <About />
-          <Projects />
-          <Skills />
-          <AIWorkflow />
-          <Timeline />
+          <AICapabilities />
+          <AITools />
+          <AIProjects />
+          <AIOperations />
+          <AILearning />
+          <AIThinking />
           <Contact />
         </main>
 
