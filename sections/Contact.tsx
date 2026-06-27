@@ -34,7 +34,7 @@ export default function Contact() {
         </motion.p>
 
         <motion.h2
-          className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-display font-black leading-none"
+          className="text-4xl sm:text-5xl md:text-8xl lg:text-9xl font-display font-black leading-none"
           variants={fadeUp}
         >
           <span

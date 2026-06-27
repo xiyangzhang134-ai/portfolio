@@ -41,7 +41,6 @@
     background-color: var(--bg);
     color: var(--text);
     overflow-x: hidden;
-    /* hide default cursor on mouse devices */
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -125,6 +124,14 @@
   @media not all and (hover: hover) {
     .cursor-custom {
       display: none;
+    }
+    /* Restore native cursor on touch */
+    body {
+      cursor: auto;
+    }
+    /* Clean tap highlight */
+    * {
+      -webkit-tap-highlight-color: transparent;
     }
   }
 

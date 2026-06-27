@@ -39,13 +39,13 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="relative h-screen w-screen overflow-hidden flex items-center justify-center"
+      className="relative h-dvh w-full overflow-hidden flex items-center justify-center"
     >
       {/* ── Background layers ── */}
       {/* Aurora blobs (CSS) */}
       <div className="absolute inset-0 z-0">
         <motion.div
-          className="aurora-blob"
+          className="aurora-blob max-sm:w-[300px] max-sm:h-[300px]"
           style={{
             width: 600,
             height: 600,
@@ -58,7 +58,7 @@ export default function Hero() {
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="aurora-blob"
+          className="aurora-blob max-sm:w-[250px] max-sm:h-[250px]"
           style={{
             width: 500,
             height: 500,
@@ -71,7 +71,7 @@ export default function Hero() {
           transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="aurora-blob"
+          className="aurora-blob max-sm:w-[180px] max-sm:h-[180px]"
           style={{
             width: 350,
             height: 350,
@@ -84,7 +84,7 @@ export default function Hero() {
           transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
         />
         <motion.div
-          className="aurora-blob"
+          className="aurora-blob max-sm:w-[200px] max-sm:h-[200px]"
           style={{
             width: 400,
             height: 400,
@@ -116,11 +116,11 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* ── Text overlay — bottom-left ── */}
-      <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 lg:bottom-16 lg:left-20 z-20 max-w-lg">
+      {/* ── Text overlay — bottom-left on desktop, centered on mobile ── */}
+      <div className="absolute bottom-8 left-4 right-4 sm:left-8 md:bottom-12 md:left-12 lg:bottom-16 lg:left-20 z-20 max-w-lg mx-auto sm:mx-0">
         {/* Greeting */}
         <motion.h2
-          className="text-sm md:text-base uppercase tracking-[0.3em] text-[#8FD3FF] mb-3 font-body"
+          className="text-xs sm:text-sm md:text-base uppercase tracking-[0.3em] text-[#8FD3FF] mb-3 font-body"
           variants={fadeUp}
           initial="hidden"
           animate={started ? "visible" : "hidden"}
@@ -129,7 +129,7 @@ export default function Hero() {
         </motion.h2>
 
         {/* Name — char-by-char reveal */}
-        <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-black leading-none mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-black leading-none mb-4">
           <motion.span
             className="inline-block"
             style={{
@@ -155,7 +155,7 @@ export default function Hero() {
 
         {/* Tagline */}
         <motion.p
-          className="text-sm md:text-base text-white/40 leading-relaxed font-body max-w-xs mb-6"
+          className="text-xs sm:text-sm md:text-base text-white/40 leading-relaxed font-body max-w-xs mb-6"
           variants={fadeUp}
           initial="hidden"
           animate={started ? "visible" : "hidden"}

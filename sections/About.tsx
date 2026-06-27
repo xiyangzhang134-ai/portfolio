@@ -32,7 +32,7 @@ export default function About() {
           <p className="text-xs uppercase tracking-[0.25em] text-[#8FD3FF] mb-4 font-body">
             Who I am
           </p>
-          <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-display font-black leading-none">
+          <h2 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-display font-black leading-none">
             <span
               style={{
                 background: "linear-gradient(135deg, #FFF6FB, #8B5CF6)",
@@ -73,7 +73,7 @@ export default function About() {
           >
             {STATS.map((stat) => (
               <div key={stat.label} className="space-y-1">
-                <p className="text-4xl md:text-5xl font-display font-black text-gradient">
+                <p className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-gradient">
                   <StatCounter
                     target={stat.value}
                     suffix={stat.suffix}

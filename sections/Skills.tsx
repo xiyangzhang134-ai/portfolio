@@ -27,8 +27,10 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Brain,
 };
 
+const IS_TOUCH = typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
+
 /**
- * Skills — glass cards with dynamic icons, tilt & glow.
+ * Skills — glass cards with dynamic icons, tilt & glow (desktop only).
  */
 export default function Skills() {
   const ref = useRef<HTMLElement>(null);
@@ -74,19 +76,19 @@ function SkillCard({
 }) {
   const ref = useRef<HTMLDivElement>(null!);
 
-  /* Tilt on hover */
+  /* Tilt on hover — desktop only */
   const rotX = useMotionValue(0);
   const rotY = useMotionValue(0);
   const springX = useSpring(rotX, { stiffness: 200, damping: 24 });
   const springY = useSpring(rotY, { stiffness: 200, damping: 24 });
 
-  const onMove = (e: React.MouseEvent) => {
+  const onMove = IS_TOUCH ? undefined : (e: React.MouseEvent) => {
     const r = ref.current.getBoundingClientRect();
     rotX.set(((e.clientY - r.top) / r.height - 0.5) * 10);
     rotY.set(((e.clientX - r.left) / r.width - 0.5) * -10);
   };
 
-  const onLeave = () => {
+  const onLeave = IS_TOUCH ? undefined : () => {
     rotX.set(0);
     rotY.set(0);
   };
@@ -96,7 +98,7 @@ function SkillCard({
   return (
     <motion.div
       ref={ref}
-      className="glass-card p-6 md:p-8 flex flex-col items-center justify-center gap-4 aspect-square group cursor-none"
+      className="glass-card p-6 md:p-8 flex flex-col items-center justify-center gap-4 aspect-square group cursor-pointer sm:cursor-none"
       initial={{ opacity: 0, y: 40, scale: 0.95 }}
       animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
       transition={{
@@ -106,11 +108,15 @@ function SkillCard({
       }}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      style={{
-        rotateX: springX,
-        rotateY: springY,
-        transformStyle: "preserve-3d",
-      }}
+      style={
+        IS_TOUCH
+          ? undefined
+          : {
+              rotateX: springX,
+              rotateY: springY,
+              transformStyle: "preserve-3d",
+            }
+      }
     >
       {/* Icon with glow */}
       <motion.div

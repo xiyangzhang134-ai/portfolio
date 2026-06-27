@@ -5,8 +5,10 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/constants";
 import { SPRING } from "@/lib/constants";
 
+const IS_TOUCH = typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
+
 /**
- * MagneticButton — the hover area pulls toward the cursor.
+ * MagneticButton — the hover area pulls toward the cursor (desktop only).
  * Combines a glass-style button with the magnetic hook.
  */
 export default function MagneticButton({
@@ -21,7 +23,7 @@ export default function MagneticButton({
   const ref = useRef<HTMLDivElement>(null!);
   const [delta, setDelta] = useState({ x: 0, y: 0 });
 
-  const onMove = (e: React.MouseEvent) => {
+  const onMove = IS_TOUCH ? undefined : (e: React.MouseEvent) => {
     const rect = ref.current?.getBoundingClientRect();
     if (!rect) return;
     setDelta({
@@ -30,7 +32,7 @@ export default function MagneticButton({
     });
   };
 
-  const onLeave = () => setDelta({ x: 0, y: 0 });
+  const onLeave = IS_TOUCH ? undefined : () => setDelta({ x: 0, y: 0 });
 
   return (
     <motion.div
@@ -38,7 +40,7 @@ export default function MagneticButton({
       className={cn("inline-block", className)}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
-      animate={{ x: delta.x, y: delta.y }}
+      animate={IS_TOUCH ? undefined : { x: delta.x, y: delta.y }}
       transition={SPRING.default}
     >
       <button
@@ -50,6 +52,7 @@ export default function MagneticButton({
           "transition-all duration-300",
           "hover:bg-[#8B5CF6] hover:text-[#FFF6FB]",
           "hover:shadow-[0_0_30px_rgba(139,92,246,0.5),0_0_60px_rgba(255,183,213,0.2)]",
+          "active:bg-[#8B5CF6] active:text-[#FFF6FB] cursor-pointer",
         )}
       >
         <span className="relative z-10">{children}</span>

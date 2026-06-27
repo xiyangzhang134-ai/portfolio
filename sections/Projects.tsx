@@ -6,8 +6,11 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { PROJECTS } from "@/lib/constants";
 import { SPRING } from "@/lib/constants";
 
+/** Sentinel: is this running on a touch device? */
+const IS_TOUCH = typeof window !== "undefined" && window.matchMedia("(hover: none)").matches;
+
 /**
- * Projects — full-width cards with tilt, hover image zoom & info reveal.
+ * Projects — full-width cards with tilt (desktop), hover image zoom & info reveal.
  */
 export default function Projects() {
   return (
@@ -43,18 +46,18 @@ function ProjectCard({
   const ref = useRef<HTMLDivElement>(null!);
   const isInView = useInView(ref, { once: true, margin: "-8%" });
 
-  /* Tilt */
+  /* Tilt — desktop only */
   const rotX = useMotionValue(0);
   const rotY = useMotionValue(0);
   const springX = useSpring(rotX, { stiffness: 300, damping: 30 });
   const springY = useSpring(rotY, { stiffness: 300, damping: 30 });
 
-  const onMove = (e: React.MouseEvent) => {
+  const onMove = IS_TOUCH ? undefined : (e: React.MouseEvent) => {
     const r = ref.current.getBoundingClientRect();
     rotX.set(((e.clientY - r.top) / r.height - 0.5) * 6);
     rotY.set(((e.clientX - r.left) / r.width - 0.5) * -6);
   };
-  const onLeave = () => {
+  const onLeave = IS_TOUCH ? undefined : () => {
     rotX.set(0);
     rotY.set(0);
   };
@@ -62,7 +65,7 @@ function ProjectCard({
   return (
     <motion.div
       ref={ref}
-      className="relative overflow-hidden rounded-3xl group cursor-none"
+      className="relative overflow-hidden rounded-3xl group cursor-pointer sm:cursor-none"
       initial={{ opacity: 0, y: 60 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 * index }}
@@ -70,7 +73,7 @@ function ProjectCard({
       onMouseLeave={onLeave}
       style={{
         transformStyle: "preserve-3d",
-        transform: `perspective(1000px) rotateX(${springX}deg) rotateY(${springY}deg)`,
+        transform: IS_TOUCH ? undefined : `perspective(1000px) rotateX(${springX}deg) rotateY(${springY}deg)`,
       }}
     >
       {/* Background gradient */}
@@ -81,14 +84,14 @@ function ProjectCard({
       {/* Content grid */}
       <div className="relative grid grid-cols-1 lg:grid-cols-5 gap-0 p-6 md:p-10 lg:p-12 bg-[#0D1117]/70 backdrop-blur-sm">
         {/* Image */}
-        <div className="lg:col-span-3 relative aspect-[16/10] rounded-xl overflow-hidden">
+        <div className="lg:col-span-3 relative aspect-[4/3] sm:aspect-[16/10] rounded-xl overflow-hidden">
           <motion.img
             src={project.image}
             alt={project.title}
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
             style={{ willChange: "transform" }}
-            whileHover={{ scale: 1.06 }}
+            whileHover={IS_TOUCH ? undefined : { scale: 1.06 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           />
           {/* Overlay gradient */}
@@ -104,9 +107,9 @@ function ProjectCard({
             {project.title}
           </h3>
           <motion.p
-            className="text-white/30 text-sm leading-relaxed mb-6 font-body max-w-sm"
+            className="text-white/40 sm:text-white/30 text-sm leading-relaxed mb-6 font-body max-w-sm sm:group-hover:opacity-100 sm:group-hover:text-white/50 transition-all duration-400"
             initial={{ opacity: 0, y: 8 }}
-            whileHover={{ opacity: 1, y: 0, color: "rgba(255,255,255,0.5)" }}
+            whileHover={IS_TOUCH ? undefined : { opacity: 1, y: 0, color: "rgba(255,255,255,0.5)" }}
             transition={{ duration: 0.4 }}
           >
             {project.description}
